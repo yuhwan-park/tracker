@@ -9,7 +9,7 @@
 
 <ul>
  <li>
-first commit
+first commit //
 메인페이지와 디테일페이지 구분
 fetch api 이용 (후에 React Query로 변경)
   </li>
