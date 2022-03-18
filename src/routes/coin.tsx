@@ -1,23 +1,20 @@
-import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTicker } from "../api";
+import Header from "../components/Header";
 const Wrapper = styled.div`
   display: flex;
   margin: 0 auto;
   align-items: center;
   flex-direction: column;
 `;
-const Header = styled.h1`
-  padding: 20px 20px;
-  font-size: 36px;
-  color: white;
+const ListWrapper = styled.ul`
+  height: 500px;
+  width: 200px;
 `;
+const CoinList = styled.li``;
 
-interface RouterState {
-  state: {
-    name: string;
-  };
-}
 interface InfoData {
   id: string;
   name: string;
@@ -74,33 +71,20 @@ interface PriceData {
 }
 
 function Coin() {
-  const [info, setInfo] = useState<InfoData>();
-  const [ticker, setTicker] = useState<PriceData>();
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams();
-  const { state } = useLocation() as RouterState;
-  useEffect(() => {
-    (async () => {
-      const json = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
-      setInfo(json);
-      console.log(json);
-    })();
-    (async () => {
-      const json = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
-      setTicker(json);
-      console.log(json);
-      setLoading(false);
-    })();
-  }, [coinId]);
-
+  const { isLoading: tickerloading, data: tickerdata } = useQuery<PriceData[]>(
+    ["ticker", coinId],
+    () => fetchCoinTicker(coinId)
+  );
+  const { isLoading: infoLoading, data: infodata } = useQuery<InfoData[]>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const loading = tickerloading || infoLoading;
   return (
     <Wrapper>
-      <Header>{state.name || "Loading..."}</Header>
-      {loading ? "Loading..." : <div>{coinId}</div>}
+      <Header />
+      {loading ? "Loading..." : <ListWrapper></ListWrapper>}
     </Wrapper>
   );
 }
