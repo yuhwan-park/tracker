@@ -23,5 +23,6 @@ fetch api 이용 (후에 React Query로 변경)
   Chart,Info 페이지 Nested Routing,
   환율 원으로 표시,
   퍼센테이지 등락율 따라 색깔 바뀌는 기능 (dynamic props)
+  3.1 // ApexChart 추가했지만 type 에러를 못고침 데이터 fetching만 해놈
   </li>
 </ul>
