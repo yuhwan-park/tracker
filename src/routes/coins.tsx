@@ -31,8 +31,19 @@ const CoinList = styled.li`
     margin-right: 10px;
   }
 `;
-const Percentage = styled.span`
-  color: red;
+const ListName = styled.li`
+  margin: 20px 0px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  span {
+    width: 200px;
+    color: white;
+  }
+`;
+const Percentage = styled.span<{ value: number }>`
+  color: ${(props) => (props.value < 0 ? "red" : "blue")};
   width: 100px;
 `;
 const Home = styled.div`
@@ -90,16 +101,28 @@ function Coins() {
           "loading..."
         ) : (
           <ListWrapper>
+            <ListName>
+              <span>코인명</span>
+              <span>전일대비</span>
+              <span>현재가격</span>
+            </ListName>
             {data?.slice(0, 100).map((coin) => (
               <CoinList key={coin.id}>
                 <img
                   src={`https://cryptoicon-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
                   alt="img"
                 ></img>
-                <Link to={`/${coin.id}`} state={{ name: coin.name }}>
+                <Link to={`/${coin.id}/chart`} state={{ name: coin.name }}>
                   <span>{coin.name}</span>
-                  <Percentage>{coin.quotes.USD.percent_change_24h}%</Percentage>
-                  <span>{coin.quotes.USD.price.toFixed(3)}$</span>
+                  <Percentage value={coin.quotes.USD.percent_change_24h}>
+                    {coin.quotes.USD.percent_change_24h}%
+                  </Percentage>
+                  <span>
+                    {(coin.quotes.USD.price * 1211).toLocaleString("en-US", {
+                      maximumFractionDigits: 0,
+                    })}
+                    원
+                  </span>
                 </Link>
               </CoinList>
             ))}

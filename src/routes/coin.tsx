@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTicker } from "../api";
 import Header from "../components/Header";
@@ -14,7 +14,21 @@ const ListWrapper = styled.ul`
   width: 200px;
 `;
 const CoinList = styled.li``;
-
+const ButtonWrapper = styled.div`
+  display: flex;
+  a {
+    text-align: center;
+    background-color: white;
+    color: black;
+    font-size: 25px;
+    margin: 20px 20px;
+    width: 100px;
+    height: 30px;
+  }
+`;
+const ArticleContainer = styled.div`
+  display: flex;
+`;
 interface InfoData {
   id: string;
   name: string;
@@ -84,7 +98,18 @@ function Coin() {
   return (
     <Wrapper>
       <Header />
-      {loading ? "Loading..." : <ListWrapper></ListWrapper>}
+      <ButtonWrapper>
+        <Link to={`/${coinId}/chart`}>Chart</Link>
+        <Link to={`/${coinId}/info`}>Info</Link>
+      </ButtonWrapper>
+      {loading ? (
+        "Loading..."
+      ) : (
+        <ArticleContainer>
+          <Outlet />
+          <ListWrapper></ListWrapper>
+        </ArticleContainer>
+      )}
     </Wrapper>
   );
 }
